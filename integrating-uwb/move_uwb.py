@@ -26,7 +26,7 @@ vel_msg = None
 vehicle_pose = PoseStamped()
 v_pose = [None, None]
 tag_pos = [None, None]
-res = [None * 7]
+res = [None] * 8
 
 
 def local_pose_callback(msg):
@@ -64,7 +64,7 @@ def write_to_csv(filename, dic):
     file_exists = os.path.isfile(filename)
     with open(filename, 'a') as csvfile:
         # robot always start from [0, 0] + ini_pos
-        headers = ['time', 'speed', 'distance', 'x', 'y', 'uwb_x', 'uwb_y']
+        headers = ['time', 'speed', 'distance', 'x', 'y', 'uwb_x', 'uwb_y', 'time_in_sec']
         file_is_empty = os.stat(filename).st_size == 0
         header_writer = csv.writer(csvfile, lineterminator='\n')
         writer = csv.DictWriter(csvfile,
@@ -126,6 +126,7 @@ def move():
     while not rospy.is_shutdown():
         # Setting the current time for distance calculus
         t0 = rospy.Time.now().to_sec()
+	res[7] = t0
         a = datetime.now()
         res[0] = a.strftime("%Y-%m-%d %H:%M:%S")
         res[1] = speed
@@ -141,6 +142,7 @@ def move():
             velocity_publisher.publish(vel_msg)
             # Takes actual time to velocity calculus
             t1 = rospy.Time.now().to_sec()
+	    res[7] = t1
             # Calculates distancePoseStamped
             current_distance = speed * (t1 - t0)
             # substract v_pose for calibration
