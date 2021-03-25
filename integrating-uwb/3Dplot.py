@@ -15,7 +15,7 @@ uwb_x = df.uwb_x
 uwb_y = df.uwb_y
 z = df.time_in_sec
 
-f = plt.figure()
+f = plt.figure(figsize=(15, 8))
 ax = f.add_subplot(111, projection='3d')
 ax.set_xlabel('x (m)')
 ax.set_ylabel('y (m)')
@@ -31,4 +31,5 @@ end = ax.scatter(x.iat[-1], y.iat[-1], z.iat[-1], marker="o", c="g")
 # ax.text(x[0], y[0], z[0], "Start", color='red')
 ax.legend((start, end, real, tag),
           ("Start", "End", "Real movement", "Calculated tag"), loc=0)
-plt.show()
+# plt.show()
+plt.savefig('3D.png', bbox_inches='tight', dpi=100)
