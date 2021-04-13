@@ -250,7 +250,7 @@ def move(speed, distance, forward):
 
 
 def rotate(angular_speed, angle, clockwise):
-    """Return the pathname of the KOS root directory."""
+    """Rotate the robot."""
     # angular_speed: degree/sec
     # counter-clockwise: turn left: positive angle
     # clockwise: turn right: negative angle
@@ -323,7 +323,7 @@ if __name__ == '__main__':
             #     r.sleep()
             move(0.5, 2, True)
             move(0.5, 2, False)
-        move(05, 2, True)
+        move(0.5, 2, True)
         rospy.on_shutdown(stop)
         rospy.signal_shutdown("You pressed Ctrl+C!")
     except rospy.ROSInterruptException:
