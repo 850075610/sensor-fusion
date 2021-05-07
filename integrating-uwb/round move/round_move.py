@@ -229,7 +229,7 @@ def move_to_goal(goal, distance_tolerance):
         vel_msg.angular.x = 0
         vel_msg.angular.y = 0
         vel_msg.angular.z = 4 * \
-                            (math.atan2(goal.y - cur_pos[1], goal.x - cur_pos[0]))
+            (math.atan2(goal.y - cur_pos[1], goal.x - cur_pos[0]))
         velocity_publisher.publish(vel_msg)
         r.sleep()
 
@@ -244,7 +244,7 @@ if __name__ == '__main__':
     velocity_publisher = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
     r = rospy.Rate(0.5)  # 0.5hz
     try:
-        # Testing move() function
+        # Test move() function
         for _ in range(2):
             #     move(0.1, 2, False)
             #     r.sleep()
@@ -252,7 +252,7 @@ if __name__ == '__main__':
             #     r.sleep()
             move(0.5, 2, True)
             move(0.5, 2, False)
-        move(05, 2, True)
+        # move(0.5, 2, True)
         rospy.on_shutdown(stop)
         rospy.signal_shutdown("You pressed Ctrl+C!")
     except rospy.ROSInterruptException:
