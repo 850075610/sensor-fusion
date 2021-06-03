@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 """
+Kalman Filter applied to robot movement for localisation.
 Date: May 2021
 """
 import argparse
@@ -26,9 +27,12 @@ res = [None] * 5
 mu = 5.0
 sig = 1000
 
-# initial motion sigma derived from the experiments (the standard deviation of the motions normal distribution)
-motion_sig = 0.028
-measurement_sig = 0.077
+# initial motion sigma derived from the experiments (0.028 and 0.077 are the theoretical standard
+# deviation of the motions normal distribution derived from extensive
+# experiments)
+motion_sig = 0.028 ** 2
+# alternative measurement_sig = 0.3 ** 2
+measurement_sig = 0.077 ** 2
 # distance since last filter cycle
 motion = 0.0
 
@@ -55,7 +59,8 @@ def odom_callback(data):
     # distance since last filter cycle
     motion = pos.x - last_odom_pos
     orientation_q = data.pose.pose.orientation
-    orientation_list = [orientation_q.x, orientation_q.y, orientation_q.z, orientation_q.w]
+    orientation_list = [orientation_q.x, orientation_q.y,
+                        orientation_q.z, orientation_q.w]
     (roll, pitch, yaw) = euler_from_quaternion(orientation_list)
     vel_x = data.twist.twist.linear.x
     res[0] = rospy.Time.now().to_sec()
@@ -256,10 +261,14 @@ if __name__ == '__main__':
         rospy.init_node('kalman_filter', anonymous=True, disable_signals=True)
         velocity_publisher = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
         filter_pub = rospy.Publisher('filtered_pos', Float64, queue_size=10)
-        rospy.Subscriber("/dwm1001/tag", Tag, local_uwb_callback, queue_size=10)
-        sub_odom = rospy.Subscriber("/odometry/filtered", Odometry, odom_callback)
-        rospy.Subscriber("/accel/filtered", AccelWithCovarianceStamped, accel_callback)
-        rospy.Subscriber("/pose", PoseStamped, local_pose_callback, queue_size=10)
+        rospy.Subscriber("/dwm1001/tag", Tag,
+                         local_uwb_callback, queue_size=10)
+        sub_odom = rospy.Subscriber(
+            "/odometry/filtered", Odometry, odom_callback)
+        rospy.Subscriber("/accel/filtered",
+                         AccelWithCovarianceStamped, accel_callback)
+        rospy.Subscriber("/pose", PoseStamped,
+                         local_pose_callback, queue_size=10)
         r = rospy.Rate(0.5)  # 0.5hz
         # print node start information
         print '*' * 40
