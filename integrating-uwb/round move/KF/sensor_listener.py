@@ -8,7 +8,7 @@ import rospy
 from geometry_msgs.msg import AccelWithCovarianceStamped, Twist
 from localizer_dwm1001.msg import Tag
 from nav_msgs.msg import Odometry
-from sensor_msgs.msg import Imu
+from rosbot_ekf.msg import Imu
 from tf.transformations import euler_from_quaternion
 
 tag_pos = [0.0, 0.0]
