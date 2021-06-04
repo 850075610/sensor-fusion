@@ -159,16 +159,16 @@ def move(speed, distance, forward):
         print "Current pose: ", cur_pos
         # if x not in res and y not in res:
         #     res.extend(cur_pos)
-        if all(res[i] for i in range(len(res))):
-            # no element is None/empty
-            if args.save and args.save.endswith('.csv'):
-                write_to_csv(args.save, res)
-            else:
-                current_date = datetime.now()
-                # name the csv file according to date automatically
-                filename = 'poseRecord' + str(current_date.day) + \
-                           str(current_date.month) + str(current_date.year)
-                write_to_csv(str(filename + '.csv'), res)
+        # if all(res[i] for i in range(len(res))):
+        #     # no element is None/empty
+        #     if args.save and args.save.endswith('.csv'):
+        #         write_to_csv(args.save, res)
+        #     else:
+        #         current_date = datetime.now()
+        #         # name the csv file according to date automatically
+        #         filename = 'poseRecord' + str(current_date.day) + \
+        #                    str(current_date.month) + str(current_date.year)
+        #         write_to_csv(str(filename + '.csv'), res)
         # rospy.loginfo(rospy.get_caller_id() + " x = %s", current_distance)
         # After the loop, stops the robot
     vel_msg.linear.x = 0
