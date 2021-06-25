@@ -11,4 +11,4 @@ Jun. 4th. 2021: Gathered sensor data into *[sensorData.csv](https://github.com/8
 Jun. 11th. 2021: Implemented two dimensional kalman filter  
 Jun. 22th. 2021: Implemented particle filter for straight movement  
 Jun. 24th. 2021: Updated kalman filter with control input alone  
-Jun. 25th. 2021: Added ground truth and repetitive result as evaluation  
+Jun. 25th. 2021: Added ground truth and repetitive experiment result as evaluation  
