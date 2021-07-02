@@ -13,7 +13,7 @@ from tf.transformations import euler_from_quaternion
 
 tag_pos = [0.0, 0.0]
 args = None
-res = [None] * 16
+res = [None] * 20
 
 
 def write_to_csv(filename, dic):
@@ -24,7 +24,9 @@ def write_to_csv(filename, dic):
         # headers = ['time', 'predicted_x', 'corrected_x', 'uwb_x', 'uwb_y',
         headers = ['time', 'la_x', 'la_y', 'uwb_x', 'uwb_y', 'vel_linear_x', 'vel_angular_z',
                    'mpu_ang_vel_z', 'mpu_linear_acc_x', 'mpu_linear_acc_y', 'odom_linear_x', 'odom_angular_z',
-                   'odom_filtered_linear_x', 'odom_filtered_angular_z', 'odom_yaw', 'odom_filtered_yaw']
+                   'odom_filtered_linear_x', 'odom_filtered_angular_z', 'odom_yaw', 'odom_filtered_yaw',
+                   'cmd_linear_x', 'cmd_angular_z', 'var_x', 'var_y']
+        # 'var_xvel', 'var_yvel', 'cov_x_xvel', 'cov_y_yvel' for extension
         file_is_empty = os.stat(filename).st_size == 0
         header_writer = csv.writer(csvfile, lineterminator='\n')
         writer = csv.DictWriter(csvfile,
@@ -39,6 +41,12 @@ def write_to_csv(filename, dic):
         writer.writerow(
             {headers[i]: dic[i]
              for i in range(len(dic))})
+
+
+def local_uwb_callback(msg):
+    global tag_pos
+    tag_pos = [msg.x, msg.y]
+    rospy.loginfo("tag_pos = %s", tag_pos)
 
 
 def accel_callback(data):
@@ -60,11 +68,6 @@ def accel_callback(data):
         filename = 'data' + str(current_date.day) + \
                    str(current_date.month) + str(current_date.year)
         write_to_csv(str(filename + '.csv'), res)
-
-
-def local_uwb_callback(msg):
-    global tag_pos
-    tag_pos = [msg.x, msg.y]
 
 
 def imu_callback(data):
@@ -100,7 +103,30 @@ def odom_filtered_callback(data):
     res[12] = data.twist.twist.linear.x
     res[13] = data.twist.twist.angular.z
     res[15] = yaw
-    rospy.loginfo("rospy.Time.now().to_sec() = %s, res[0] = %s", rospy.Time.now().to_sec(), res[0])
+    # pose.covariance must be stored given indices rather than a whole matrix
+    # format according to
+    # http://docs.ros.org/en/melodic/api/geometry_msgs/html/msg/PoseWithCovariance.html
+
+    pos_cov = data.pose.covariance
+    # len(pos_cov) = 36: 6 variables:
+    # x, y, z, rotation about X axis, rotation about Y axis, rotation about Z axis
+    # rospy.loginfo("Length pos_cov = %s", len(pos_cov))
+    # var_x
+    res[18] = pos_cov[0]
+
+    # var_y: pos_cov[1][1]
+    res[19] = pos_cov[7]
+
+    # var_xvel, var_yvel, cov_x_xvel, cov_y_yvel are not able to get yet
+    # res[19] = pos_cov[21]
+    # # : pos_cov[4][4]
+    # res[21] = pos_cov[28]
+    # res[22] = pos_cov[3]
+    # # : pos_cov[1][4]
+    # res[23] = pos_cov[10]
+
+    # rospy.loginfo(
+    # "rospy.Time.now().to_sec() = %s, res[0] = %s", rospy.Time.now().to_sec(), res[0])
     # res[0] = rospy.Time.now().to_sec()
     # add kalman cycle here
     # mu, sig = predict_step(mu, sig, motion, motion_sig)
@@ -119,6 +145,13 @@ def vel_callback(data):
     # data.linear.x is proven to approach assigned velocity as soon as possible
     res[5] = data.linear.x
     res[6] = data.angular.z
+
+
+def cmd_callback(data):
+    global res
+    # data.linear.x is proven to approach assigned velocity as soon as possible
+    res[16] = data.linear.x
+    res[17] = data.angular.z
 
 
 def callback(data):
@@ -153,7 +186,7 @@ def listener():
     rospy.Subscriber("odom", Odometry, odom_callback)
     rospy.Subscriber("/odometry/filtered", Odometry, odom_filtered_callback)
     rospy.Subscriber("/velocity", Twist, vel_callback)
-    # rospy.Subscriber("odom", Odometry, callback)
+    rospy.Subscriber("/cmd_vel", Twist, cmd_callback)
     rospy.spin()
 
 
