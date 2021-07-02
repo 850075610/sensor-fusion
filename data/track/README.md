@@ -6,4 +6,4 @@ experiment:
 		files: point1..8.csv (each around 10 s)
 	2. robot motion by remote control, track
 
-exp1 -- 10_2506.csv are repetitive experiments 
+f'exp{i}_DATE.csv' are repetitive experiments, where i is the number of experiment.
