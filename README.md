@@ -13,3 +13,4 @@ Jun. 22th. 2021: Implemented particle filter for straight movement
 Jun. 24th. 2021: Updated kalman filter with control input alone  
 Jun. 25th. 2021: Added ground truth and repetitive experiment result as evaluation  
 Jul. 5th. 2021: Updated evaluation with mean error and its variance  
+Jul. 7th. 2021: Added fusion result of movement in corridor by remote control  
