@@ -21,3 +21,10 @@ Above data format fit 16-column **version 1** csv files, afterwards 4 new column
 
 * 'var_x', 'var_y': variance for X and Y from topic */odometry/filtered*
 
+Since Jul. 9th. 2021 four new columns are appended as **version 3** csv files:
+
+* 'vel_linear_y' from topic */velocity*  
+* 'odom_linear_y' from topic *odom*  
+* 'odom_filtered_linear_y' from topic */odometry/filtered*  
+* 'cmd_linear_y' from topic */cmd_vel*  
+
