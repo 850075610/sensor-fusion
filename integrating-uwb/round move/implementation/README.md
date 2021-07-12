@@ -28,3 +28,4 @@ Since Jul. 9th. 2021 four new columns are appended as **version 3** csv files:
 * 'odom_filtered_linear_y' from topic */odometry/filtered*  
 * 'cmd_linear_y' from topic */cmd_vel*  
 
+Since Jul. 12th. 2021 (exp6_1207.csv) all columns from topic */odometry/filtered* are removed as **version 4** csv files.  
