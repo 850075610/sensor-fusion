@@ -15,3 +15,4 @@ Jun. 25th. 2021: Added ground truth and repetitive experiment result as evaluati
 Jul. 5th. 2021: Updated evaluation with mean error and its variance  
 Jul. 7th. 2021: Added fusion result of movement in corridor by remote control  
 Jul. 15th. 2021: Added fusion result of movement in the hall of APB by remote control  
+Jul. 22th. 2021: Updated evaluation for the experiments in the foyer with mean error and its variance  
